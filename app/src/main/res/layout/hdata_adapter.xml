@@ -1,0 +1,63 @@
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/con_sub_adapter"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="2dp"
+    android:layout_marginEnd="5dp"
+    android:layout_marginBottom="5dp">
+
+
+
+    <ImageView
+        android:id="@+id/imageView_author_adapter"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/placeholder_portable"
+        android:contentDescription="@string/app_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/textView_authorName_adapter"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="2dp"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="2"
+        android:text="@string/app_name"
+        android:textColor="@color/textView_author"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView_author_adapter" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="textView_authorName_adapter,imageView_author_adapter"/>
+
+    <View
+        android:id="@+id/view_category_home"
+        android:layout_width="3dp"
+        android:layout_height="5dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="10dp"
+        android:background="@drawable/home_line"
+        app:layout_constraintEnd_toEndOf="@+id/barrier" />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
