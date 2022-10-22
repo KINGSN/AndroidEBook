@@ -1,14 +1,12 @@
-package com.example.androidebookapp.adapter;
-
-import static android.content.Context.MODE_PRIVATE;
+package com.example.androidebookapp.adapter.booksdapter;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Log;
 import android.util.TypedValue;
@@ -19,24 +17,19 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
-
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DecodeFormat;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.androidebookapp.R;
 import com.example.androidebookapp.databinding.HdataAdapterBinding;
+import com.example.androidebookapp.fragment.bookfragments.SubjectFragment;
 import com.example.androidebookapp.item.BookSubCategoryList;
 import com.example.androidebookapp.util.Method;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 
 public class MyHDataAdapter extends RecyclerView.Adapter<MyHDataAdapter.MyViewHolder> {
@@ -52,7 +45,7 @@ public class MyHDataAdapter extends RecyclerView.Adapter<MyHDataAdapter.MyViewHo
     private Method method;
     AlertDialog alertDialog;
     LayoutInflater layoutInflater;
-    private Fragment IdsFragment;
+    private SubjectFragment IdsFragment;
     private int columnWidth;
 
     // int count=0;
@@ -89,45 +82,51 @@ public class MyHDataAdapter extends RecyclerView.Adapter<MyHDataAdapter.MyViewHo
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-      /*  final IDD_Data myIdData = myId_data.get(position);
-        holder.binding.titletxt.setText(myIdData.getTradeName());
-        holder.binding.tearntxt.setText("Earn Rs "+myIdData.getTotalEarning());
+    public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
 
-        if (!myIdData.getTradeImg().equals("")) {
-            Log.d("stockearn", "onBindViewHolder: " + myIdData.getTradeImg());
+        holder.binding.title1.setText(myId_data.get(position).getSubCategoryName());
+        Log.d("stockearn", "onBindViewHolder: " + myId_data.get(position).getSubCategoryName());
+
+        if (!myId_data.get(position).getSubCategoryImage().equals("")) {
+            Log.d("stockearn", "onBindViewHolder: " + myId_data.get(position).getSubCid());
             Glide.with(context)
-                    .load(myIdData.getTradeImg())
-                    .placeholder(R.drawable.round_bg)
+                    .load(myId_data.get(position).getSubImageThumb())
                     .dontAnimate()
+                    .thumbnail(0.5f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(holder.binding.idImage);
+                    .format(DecodeFormat.PREFER_ARGB_8888)
+                    .encodeFormat(Bitmap.CompressFormat.PNG)
+                    .into(holder.binding.icon);
+
+
 
         }
 
-        holder.binding.idImage.setOnClickListener(new View.OnClickListener() {
+
+
+        holder.binding.icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
               //  method.copyToclipboard1(context,holder.binding.idName);
+                Log.d("KINGSN", "onClick:SID "+myId_data.get(position).getSid());
 
-
-               *//* ((FragmentActivity)context).getSupportFragmentManager()
+                ((FragmentActivity)context).getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.nav_host_fragment_activity_main, new IdsFragment())
-                                .commit();*//*
+                        .replace(R.id.frameLayout_main, new SubjectFragment(myId_data.get(position).getSid()))
+                                .commit();
 
-                FragmentTransaction transaction =  ((FragmentActivity)context).getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.nav_host_fragment_activity_main, IdsFragment,
+              /*  FragmentTransaction transaction =  ((FragmentActivity)context).getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.frameLayout_main, IdsFragment,
                         IdsFragment.getClass().getSimpleName());
                 transaction.addToBackStack(null);
-                transaction.commit();
+                transaction.commit();*/
 
              //   activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, IdsFragment).addToBackStack(null).commit();
 
 
 
             }
-        });*/
+        });
 
 
     }

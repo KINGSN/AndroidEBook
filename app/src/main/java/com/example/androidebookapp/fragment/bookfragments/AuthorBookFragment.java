@@ -1,4 +1,4 @@
-package com.example.androidebookapp.fragment;
+package com.example.androidebookapp.fragment.bookfragments;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;

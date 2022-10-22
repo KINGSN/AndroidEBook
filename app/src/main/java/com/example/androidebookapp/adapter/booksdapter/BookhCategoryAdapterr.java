@@ -1,4 +1,4 @@
-package com.example.androidebookapp.adapter;
+package com.example.androidebookapp.adapter.booksdapter;
 
 import android.app.Activity;
 import android.content.res.Resources;
@@ -9,14 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidebookapp.Interface.Helper;
 import com.example.androidebookapp.R;
-import com.example.androidebookapp.databinding.BookTabItemBindingImpl;
-import com.example.androidebookapp.databinding.BookTabItemBindingImpl;
+import com.example.androidebookapp.adapter.CategoryAdapterr;
+import com.example.androidebookapp.databinding.BookTabItemBinding;
 import com.example.androidebookapp.https.HttpsRequest;
 import com.example.androidebookapp.interfaces.OnClick;
 import com.example.androidebookapp.item.BookSubCategoryList;
@@ -42,20 +41,21 @@ public Integer m=0;
     private String type;
     private int columnWidth;
     private List<CategoryList> categoryLists;
-   public BookTabItemBindingImpl binding;
+   public BookTabItemBinding binding;
     public ArrayList<BookSubCategoryList> my_id_dataArrayList1;
     private final int VIEW_TYPE_LOADING = 0;
     private final int VIEW_TYPE_ITEM = 1;
     private final int VIEW_TYPE_Ad = 2;
-    public  CategoryAdapterr categoryAdapterr;
+    public CategoryAdapterr categoryAdapterr;
     private String adsParam = "1";
     public  ViewHolder viewHolder;
+    public int i=0;
 
     public BookhCategoryAdapterr(Activity activity, List<CategoryList> categoryLists,int i, String type, OnClick onClick) {
         this.activity = activity;
         this.type = type;
         this.categoryLists = categoryLists;
-       // this.i=i;
+        this.i=i;
         method = new Method(activity, onClick);
         Resources r = activity.getResources();
         float padding = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 3, r.getDisplayMetrics());
@@ -79,7 +79,7 @@ public Integer m=0;
 
             final BookhCategoryAdapterr.ViewHolder viewHolder = (BookhCategoryAdapterr.ViewHolder) holder;
 
-            viewHolder.constraintLayout.setLayoutParams(new CardView.LayoutParams(CardView.LayoutParams.MATCH_PARENT, columnWidth / 3));
+         //   viewHolder.constraintLayout.setLayoutParams(new CardView.LayoutParams(CardView.LayoutParams.MATCH_PARENT, columnWidth / 3));
 
 
         }
@@ -115,7 +115,7 @@ public Integer m=0;
             imageView = itemView.findViewById(R.id.imageView_cat_adapter);
             textView = itemView.findViewById(R.id.textViewName_cat_adapter);
             textViewItem = itemView.findViewById(R.id.textView_item_cat_adapter);
-           // constraintLayout = itemView.findViewById(R.id.con_BooktabMain);
+            constraintLayout = itemView.findViewById(R.id.con_BooktabMain);
         }
     }
 
@@ -142,7 +142,7 @@ public Integer m=0;
                         my_id_dataArrayList1 = new ArrayList<>();
                         Type getpetDTO = new TypeToken<List<BookSubCategoryList>>() {
                         }.getType();
-                        my_id_dataArrayList1 = (ArrayList<BookSubCategoryList>) new Gson().fromJson(response.getJSONObject(GlobalVariables.AppSid).getJSONObject("category_list").getJSONArray("Life").toString(), getpetDTO);
+                        my_id_dataArrayList1 = (ArrayList<BookSubCategoryList>) new Gson().fromJson(response.getJSONObject(GlobalVariables.AppSid).getJSONObject("category_list").getJSONArray(String.valueOf(GlobalVariables.categoryLists.get(i))).toString(), getpetDTO);
 
                         Log.d("KINGSNSIZE", "backResponse: "+ my_id_dataArrayList1);
                         if (my_id_dataArrayList1.size() > 0) {

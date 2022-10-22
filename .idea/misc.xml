@@ -4,8 +4,11 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/drawable-nodpi/ic_library.xml" value="0.1" />
+        <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/drawable-nodpi/round_bg.xml" value="0.1155" />
+        <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/drawable-nodpi/round_border.xml" value="0.189" />
         <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/drawable/progress_track.xml" value="0.1225" />
         <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/layout/activity_about_us.xml" value="0.20416666666666666" />
+        <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/layout/activity_book_detail.xml" value="0.1" />
         <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/layout/activity_book_list.xml" value="0.20416666666666666" />
         <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/layout/activity_fp.xml" value="0.20416666666666666" />
         <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/layout/activity_main.xml" value="0.1" />
@@ -15,27 +18,35 @@
         <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/layout/book_category_adapter.xml" value="0.25" />
         <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/layout/book_categoryhome_adapter.xml" value="0.2384428223844282" />
         <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/layout/book_categoryhome_item.xml" value="0.20416666666666666" />
+        <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/layout/book_chapterb_adapter.xml" value="0.22" />
         <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/layout/book_fragment.xml" value="0.20416666666666666" />
         <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/layout/book_gridview_adapter.xml" value="0.20416666666666666" />
         <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/layout/book_home_adapter.xml" value="0.20416666666666666" />
         <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/layout/book_home_fragment.xml" value="0.20416666666666666" />
-        <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/layout/book_listview_adapter.xml" value="0.20416666666666666" />
+        <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/layout/book_listview_adapter.xml" value="0.25" />
         <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/layout/book_subcategory_adapter.xml" value="0.33" />
         <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/layout/book_tab_item.xml" value="0.20416666666666666" />
+        <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/layout/booksubject_item.xml" value="0.20416666666666666" />
         <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/layout/category_adapter.xml" value="0.388671875" />
         <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/layout/category_adapterr.xml" value="0.33" />
         <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/layout/category_fragment.xml" value="0.20416666666666666" />
-        <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/layout/hdata_adapter.xml" value="0.2" />
+        <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/layout/fragment_blank.xml" value="0.20416666666666666" />
+        <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/layout/fragment_bookchapter.xml" value="0.2" />
+        <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/layout/fragment_subject_tab.xml" value="0.20416666666666666" />
+        <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/layout/hdata_adapter.xml" value="0.22" />
         <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/layout/home_category_adapter.xml" value="0.5" />
         <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/layout/home_category_adapterr.xml" value="0.22" />
         <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/layout/home_fragment.xml" value="0.2" />
+        <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/layout/item_daily_booster.xml" value="0.20416666666666666" />
         <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/layout/layout_loading_item.xml" value="0.20416666666666666" />
         <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/layout/no_data_found.xml" value="0.20416666666666666" />
         <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/layout/poolview.xml" value="0.22" />
+        <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/layout/slider_adapter.xml" value="0.20416666666666666" />
         <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/layout/slider_external_adapter.xml" value="0.20416666666666666" />
         <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/layout/spinner_item.xml" value="0.20416666666666666" />
         <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/layout/sub_category_adapter.xml" value="0.20416666666666666" />
         <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/layout/subcat_book_fragment.xml" value="0.20416666666666666" />
+        <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/layout/subject_fragment.xml" value="0.12" />
         <entry key="..\:/ANDROID PROJECTS/Clients App/quizwithbook app/androidebook-13/AndroidEBook_V13/app/src/main/res/menu/activity_main_drawer.xml" value="0.1" />
       </map>
     </option>

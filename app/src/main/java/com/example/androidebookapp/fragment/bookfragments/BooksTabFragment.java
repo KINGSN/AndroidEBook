@@ -1,4 +1,4 @@
-package com.example.androidebookapp.fragment;
+package com.example.androidebookapp.fragment.bookfragments;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,9 +12,9 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -27,19 +27,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidebookapp.Interface.Helper;
 import com.example.androidebookapp.R;
-import com.example.androidebookapp.activity.BookDetail;
 import com.example.androidebookapp.activity.MainActivity;
 import com.example.androidebookapp.activity.SearchBook;
 import com.example.androidebookapp.adapter.BookHomeAdapter;
-import com.example.androidebookapp.adapter.BookTabAdapter;
-import com.example.androidebookapp.adapter.BookhCategoryAdapterr;
-import com.example.androidebookapp.adapter.CategoryAdapter;
+import com.example.androidebookapp.adapter.booksdapter.BookTabAdapter;
+import com.example.androidebookapp.adapter.booksdapter.BookdailyBoosterAdapter;
+import com.example.androidebookapp.adapter.booksdapter.BookhCategoryAdapterr;
 import com.example.androidebookapp.adapter.HomeAuthorAdapter;
 import com.example.androidebookapp.adapter.SliderAdapter;
 import com.example.androidebookapp.https.HttpsRequest;
 import com.example.androidebookapp.interfaces.OnClick;
 import com.example.androidebookapp.item.BookSubCategoryList;
-import com.example.androidebookapp.item.BookhSubCategoryList;
 import com.example.androidebookapp.item.CategoryList;
 import com.example.androidebookapp.response.CatRP;
 import com.example.androidebookapp.rest.ApiClient;
@@ -53,13 +51,11 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 import com.rd.PageIndicatorView;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -86,15 +82,16 @@ public class BooksTabFragment extends Fragment {
     private EnchantedViewPager enchantedViewPager;
     private List<CategoryList> categoryLists;
     private BookTabAdapter categoryAdapter;
+    private BookdailyBoosterAdapter bookdailyBoosterAdapter;
     private Boolean isOver = false;
     private int paginationIndex = 1;
     private String adsParam = "1";
 
 
     private ArrayList<BookSubCategoryList> my_id_dataArrayList;
-    private ConstraintLayout conMain, conNoData, conSlider, conContinue, conCategory, conLatest, conPopular, conAuthor;
-    private RecyclerView recyclerViewContinue, recyclerViewLatest, recyclerViewPopular, recyclerViewCat, recyclerViewAuthor;
-
+    private ConstraintLayout conMain, conNoData, conSlider, conContinue, conLatest, conPopular, conAuthor;
+    private RecyclerView recyclerViewContinue, recyclerViewLatest, dailyboosterre, recyclerViewCat, recyclerViewAuthor;
+     private LinearLayout conCategory;
     private Timer timer;
     final long DELAY_MS = 500;//delay in milliseconds before task is to be executed
     final long PERIOD_MS = 3000;
@@ -129,26 +126,27 @@ public class BooksTabFragment extends Fragment {
         conMain = view.findViewById(R.id.con_main_home);
         conNoData = view.findViewById(R.id.con_noDataFound);
         editText_search = view.findViewById(R.id.editText_home);
-        enchantedViewPager = view.findViewById(R.id.slider_home);
-        pageIndicatorView = view.findViewById(R.id.pageIndicatorView_home);
+      /*  enchantedViewPager = view.findViewById(R.id.slider_home);
+        pageIndicatorView = view.findViewById(R.id.pageIndicatorView_home);*/
         conSlider = view.findViewById(R.id.con_slider_home);
         conContinue = view.findViewById(R.id.con_continue_home);
-        conCategory = view.findViewById(R.id.con_category_home);
+      //  conCategory = view.findViewById(R.id.con_category_home);
 
         ImageView imageViewSearch = view.findViewById(R.id.imageView_search_home);
         MaterialTextView textViewCat = view.findViewById(R.id.textView_categoryViewAll_home);
 
         recyclerViewCat = view.findViewById(R.id.recyclerView_category_home);
+        dailyboosterre = view.findViewById(R.id.dailyboosterre);
 
 
 
 
         conNoData.setVisibility(View.GONE);
-      // conMain.setVisibility(View.GONE);
-        progressBar.setVisibility(View.GONE);
+       conMain.setVisibility(View.GONE);
+       progressBar.setVisibility(View.GONE);
 
-        enchantedViewPager.useScale();
-        enchantedViewPager.removeAlpha();
+     /*   enchantedViewPager.useScale();
+        enchantedViewPager.removeAlpha();*/
 
 
 
@@ -178,11 +176,11 @@ public class BooksTabFragment extends Fragment {
 
         if (method.isNetworkAvailable()) {
             if (method.isLogin()) {
-                home(method.userId());
+                //home(method.userId());
             } else {
                // home("0");
-               category();
-                //getMyId(requireActivity());
+               //category();
+                getMyId(requireActivity());
             }
         } else {
             method.alertBox(getResources().getString(R.string.internet_connection));
@@ -233,101 +231,7 @@ public class BooksTabFragment extends Fragment {
 
     }
 
-    private void home(String userId) {
 
-        if (getActivity() != null) {
-
-            progressBar.setVisibility(View.VISIBLE);
-
-            JsonObject jsObj = (JsonObject) new Gson().toJsonTree(new API(getActivity()));
-            jsObj.addProperty("user_id", userId);
-            jsObj.addProperty("method_name", "get_bookcategory");
-            jsObj.addProperty("ads_param", "1");
-            Log.d("KINGSN", "jsonobject: "+jsObj);
-            ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-            Call<BookhSubCategoryList> call = apiService.getBookSubCategoryList(API.toBase64(jsObj.toString()));
-            Log.d("KINGSNH", "onResponsejb: ");
-            call.enqueue(new Callback<BookhSubCategoryList>() {
-                @Override
-                public void onResponse(@NotNull Call<BookhSubCategoryList> call, @NotNull Response<BookhSubCategoryList> response) {
-
-                    Log.d("KINGSNH", "onResponse: "+response);
-                    if (getActivity() != null) {
-
-                        try {
-
-                            BookhSubCategoryList bookhSubCategoryList = response.body();
-                            assert bookhSubCategoryList != null;
-
-                            if (bookhSubCategoryList.getStatus().equals("1")) {
-                                conCategory.setVisibility(View.VISIBLE);
-
-                                Log.d("KINGSNH" ,"onResponse: "+bookhSubCategoryList.getCategoryLists().size());
-
-                                if (bookhSubCategoryList.getCategoryLists().size()!= 0) {
-
-                                    homeCatAdapter = new BookhCategoryAdapterr(getActivity(), bookhSubCategoryList.getCategoryLists(),0, "category", onClick);
-                                    recyclerViewCat.setAdapter(homeCatAdapter);
-                                    recyclerViewCat.setLayoutAnimation(animation);
-
-                                    Log.d("KINGSN", "onResponse: "+GlobalVariables.categoryLists.get(0).getCategory_name().toString());
-                                } else {
-                                    conCategory.setVisibility(View.GONE);
-                                }
-
-                               /* if (homeRP.getLatestList().size() != 0) {
-                                    latestAdapter = new BookHomeAdapter(getActivity(), homeRP.getLatestList(), "home_latest", onClick);
-                                    recyclerViewLatest.setAdapter(latestAdapter);
-                                } else {
-                                    conLatest.setVisibility(View.GONE);
-                                }
-
-                                if (homeRP.getPopularList().size() != 0) {
-                                    popularAdapter = new BookHomeAdapter(getActivity(), homeRP.getPopularList(), "home_most", onClick);
-                                    recyclerViewPopular.setAdapter(popularAdapter);
-                                } else {
-                                    conPopular.setVisibility(View.GONE);
-                                }
-
-                                if (homeRP.getAuthorLists().size() != 0) {
-                                    authorAdapter = new HomeAuthorAdapter(getActivity(), homeRP.getAuthorLists(), "home_author", onClick);
-                                    recyclerViewAuthor.setAdapter(authorAdapter);
-                                } else {
-                                    conAuthor.setVisibility(View.GONE);
-                                }
-*/
-                                conMain.setVisibility(View.VISIBLE);
-
-                            } else if (bookhSubCategoryList.getStatus().equals("2")) {
-                                method.suspend(bookhSubCategoryList.getMessage());
-                            } else {
-                                conNoData.setVisibility(View.VISIBLE);
-                                method.alertBox(bookhSubCategoryList.getMessage());
-                            }
-
-                        } catch (Exception e) {
-                            Log.d("exception_error", e.toString());
-                            method.alertBox(getResources().getString(R.string.failed_try_again));
-                        }
-
-                    }
-
-                    progressBar.setVisibility(View.GONE);
-
-                }
-
-                @Override
-                public void onFailure(@NotNull Call<BookhSubCategoryList> call, @NotNull Throwable t) {
-                    // Log error here since request failed
-                    Log.e("fail", t.toString());
-                    conNoData.setVisibility(View.VISIBLE);
-                    progressBar.setVisibility(View.GONE);
-                    method.alertBox(getResources().getString(R.string.failed_try_again));
-                }
-            });
-
-        }
-    }
 
 
     private void category() {
@@ -342,7 +246,7 @@ public class BooksTabFragment extends Fragment {
             JsonObject jsObj = (JsonObject) new Gson().toJsonTree(new API(getActivity()));
             jsObj.addProperty("ads_param", adsParam);
             jsObj.addProperty("page", paginationIndex);
-            jsObj.addProperty("method_name", "get_category");
+            jsObj.addProperty("method_name", "get_Bookcategory");
             ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
             Call<CatRP> call = apiService.getCategory(API.toBase64(jsObj.toString()));
             call.enqueue(new Callback<CatRP>() {
@@ -350,7 +254,7 @@ public class BooksTabFragment extends Fragment {
                 public void onResponse(@NotNull Call<CatRP> call, @NotNull Response<CatRP> response) {
 
                     if (getActivity() != null) {
-                        conCategory.setVisibility(View.VISIBLE);
+                       // conCategory.setVisibility(View.VISIBLE);
                         try {
 
                             CatRP catRP = response.body();
@@ -359,6 +263,8 @@ public class BooksTabFragment extends Fragment {
                             if (catRP.getStatus().equals("1")) {
 
                                 adsParam = catRP.getAds_param();
+
+                                Log.d("KINGSN", "onResponse: "+categoryLists.size());
 
                                 if (catRP.getCategoryLists().size() == 0) {
                                     if (categoryAdapter != null) {
@@ -373,7 +279,7 @@ public class BooksTabFragment extends Fragment {
                                     if (categoryLists.size() == 0) {
                                         conNoData.setVisibility(View.VISIBLE);
                                     } else {
-                                        categoryAdapter = new BookTabAdapter(getActivity(), categoryLists, "category", onClick);
+                                        categoryAdapter = new BookTabAdapter(getActivity(), categoryLists,0, "category", onClick);
                                         recyclerViewCat.setAdapter(categoryAdapter);
                                         recyclerViewCat.setLayoutAnimation(animation);
 
@@ -414,8 +320,10 @@ public class BooksTabFragment extends Fragment {
     }
 
     public void getMyId(Activity activity) {
+        categoryLists.clear();
        // method.loadingDialogg(activity);
-        conCategory.setVisibility(View.VISIBLE);
+        conMain.setVisibility(View.GONE);
+        progressBar.setVisibility(View.VISIBLE);
         method.params.clear();
         method.params.put("mobile","" );
         // method.showToasty(activity,"1",""+GlobalVariables.adminUserID);
@@ -428,28 +336,28 @@ public class BooksTabFragment extends Fragment {
                 if (flag) {
                     // binding.tvNo.setVisibility(View.GONE);
 
-                    conMain.setVisibility(View.VISIBLE);
+
 
                     try {
-                        //  Log.d(GlobalVariables.TAG, "getIDhk:" + response.getJSONObject(GlobalVariables.AppSid).getJSONObject("Results").toString());
 
-
-                       // setData();
-
-                       /* homeCatAdapter = new BookhCategoryAdapterr(getActivity(), GlobalVariables.categoryLists,0, "category", onClick);
-                        recyclerViewCat.setAdapter(homeCatAdapter);
-                        recyclerViewCat.setLayoutAnimation(animation);
-*/
                         for(int i=0;i<GlobalVariables.categoryLists.size();i++){
                             int j=i;
-                            // Get current json object
-
-                            //JSONObject ob=array.getJSONObject(i);
 
 
-                            homeCatAdapter = new BookhCategoryAdapterr(getActivity(), GlobalVariables.categoryLists,0, "category", onClick);
-                            recyclerViewCat.setAdapter(homeCatAdapter);
+                            bookdailyBoosterAdapter = new BookdailyBoosterAdapter(getActivity(),  GlobalVariables.categoryLists,i, "category", onClick);
+                            dailyboosterre.setAdapter(bookdailyBoosterAdapter);
+                            dailyboosterre.setLayoutAnimation(animation);
+
+
+
+                            categoryAdapter = new BookTabAdapter(getActivity(),  GlobalVariables.categoryLists,i, "category", onClick);
+                            recyclerViewCat.setAdapter(categoryAdapter);
                             recyclerViewCat.setLayoutAnimation(animation);
+
+                            conMain.setVisibility(View.VISIBLE);
+                            progressBar.setVisibility(View.GONE);
+                            progressBar.setVisibility(View.GONE);
+
 
 
 

@@ -41,6 +41,9 @@ public class RestAPI {
     public static final String GET_TICKET_COMMENTS_API =URL + "getTicketComments";
     public static final String ADD_TICKET_COMMENTS_API = URL + "addTicketComments";
     public static final String get_bookcategory = "get_bookcategory";
+    public static final String get_bookSubjects = "get_book_subjects";
+    public static final String get_book_subjects_chapter = "get_book_subjects_chapter";
+    public static final String get_books = "get_books";
 
 
 

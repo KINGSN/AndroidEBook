@@ -1,61 +1,65 @@
-<layout
+<layout xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 <androidx.constraintlayout.widget.ConstraintLayout
+    android:background="@color/white"
     android:id="@+id/con_sub_adapter"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginTop="2dp"
+    android:layout_marginTop="1dp"
     android:layout_marginEnd="5dp"
-    android:layout_marginBottom="5dp">
+    android:layout_marginBottom="1dp">
 
 
 
-    <ImageView
-        android:id="@+id/imageView_author_adapter"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:src="@drawable/placeholder_portable"
-        android:contentDescription="@string/app_name"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <RelativeLayout
+        android:layout_width="80dp"
+        android:layout_height="90dp"
+        android:orientation="vertical"
+        android:padding="2dp"
+        tools:ignore="MissingConstraints">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/textView_authorName_adapter"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="2dp"
-        android:ellipsize="end"
-        android:gravity="center"
-        android:maxLines="2"
-        android:text="@string/app_name"
-        android:textColor="@color/textView_author"
-        android:textSize="12sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView_author_adapter" />
+        <LinearLayout
+            android:background="@color/white"
+            android:id="@+id/l1"
+            android:layout_width="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/barrier"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:barrierDirection="bottom"
-        app:constraint_referenced_ids="textView_authorName_adapter,imageView_author_adapter"/>
+            <ImageView
+                android:id="@+id/icon"
+                android:background="@color/white"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginBottom="12dp"
+                android:src="@drawable/profile" />
 
-    <View
-        android:id="@+id/view_category_home"
-        android:layout_width="3dp"
-        android:layout_height="5dp"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="10dp"
-        android:background="@drawable/home_line"
-        app:layout_constraintEnd_toEndOf="@+id/barrier" />
 
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/title1"
+            android:layout_below="@+id/l1"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:maxLines="2"
+            android:text="Dailybcb"
+            android:textSize="11dp"/>
+
+
+        <View
+            android:background="@color/app_gray"
+            android:layout_width="1dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:layout_alignParentEnd="true"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

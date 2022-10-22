@@ -1,111 +1,62 @@
-package com.example.androidebookapp.adapter;
-
-import static java.security.AccessController.getContext;
+package com.example.androidebookapp.adapter.booksdapter;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.res.Resources;
-import android.os.Bundle;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.multidex.BuildConfig;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.applovin.mediation.MaxAd;
-import com.applovin.mediation.MaxError;
-import com.applovin.mediation.nativeAds.MaxNativeAdListener;
-import com.applovin.mediation.nativeAds.MaxNativeAdLoader;
-import com.applovin.mediation.nativeAds.MaxNativeAdView;
 import com.bumptech.glide.Glide;
-import com.example.androidebookapp.Interface.Helper;
 import com.example.androidebookapp.R;
-import com.example.androidebookapp.https.HttpsRequest;
+import com.example.androidebookapp.fragment.bookfragments.SubjectFragment;
+import com.example.androidebookapp.fragment.bookschapterFragment;
 import com.example.androidebookapp.interfaces.OnClick;
-import com.example.androidebookapp.item.BookSubCategoryList;
-import com.example.androidebookapp.item.CategoryList;
-import com.example.androidebookapp.item.SubCategoryList;
-import com.example.androidebookapp.response.CatRP;
-import com.example.androidebookapp.rest.ApiClient;
-import com.example.androidebookapp.rest.ApiInterface;
-import com.example.androidebookapp.util.API;
-import com.example.androidebookapp.util.GlobalVariables;
+import com.example.androidebookapp.item.BookSubjectList;
 import com.example.androidebookapp.util.Method;
-import com.example.androidebookapp.util.RestAPI;
-import com.example.androidebookapp.util.ScrollingLinearLayoutManager;
-import com.facebook.ads.Ad;
-import com.facebook.ads.AdError;
-import com.facebook.ads.AdOptionsView;
-import com.facebook.ads.MediaView;
-import com.facebook.ads.NativeAd;
-import com.facebook.ads.NativeAdLayout;
-import com.facebook.ads.NativeAdListener;
-import com.google.ads.mediation.admob.AdMobAdapter;
-import com.google.android.ads.nativetemplates.NativeTemplateStyle;
-import com.google.android.ads.nativetemplates.TemplateView;
-import com.google.android.gms.ads.AdLoader;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.material.textview.MaterialTextView;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
-import com.startapp.sdk.ads.nativead.NativeAdDetails;
-import com.startapp.sdk.ads.nativead.NativeAdPreferences;
-import com.startapp.sdk.ads.nativead.StartAppNativeAd;
-import com.startapp.sdk.adsbase.adlisteners.AdEventListener;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONObject;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.PrimitiveIterator;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-public class BookTabAdapter extends RecyclerView.Adapter {
+public class BookSubjectAdapter extends RecyclerView.Adapter {
 
     private Method method;
     private Activity activity;
     private String type;
     private int columnWidth;
-    private List<CategoryList> categoryLists;
-    //private List<BookSubCategoryList> categoryListss;
+    private List<BookSubjectList> bookSubjectLists;
+    //private List<BookSubCategoryList> bookSubjectListss;
 
-    public ArrayList<BookSubCategoryList> my_id_dataArrayList1;
+    public ArrayList<BookSubjectList> my_id_dataArrayList1;
     private OnClick onClick;
-    private BookTabAdapter categoryAdapter;
+    private BookSubjectAdapter categoryAdapter;
     public MyHDataAdapter categoryAdapterr;
     private Boolean isOver = false;
     private int paginationIndex = 1;
     private String adsParam = "1";
+    public String CategoryN;
 
     private final int VIEW_TYPE_LOADING = 0;
     private final int VIEW_TYPE_ITEM = 1;
     private final int VIEW_TYPE_Ad = 2;
-
-    public BookTabAdapter(Activity activity, List<CategoryList> categoryLists, String type, OnClick onClick) {
+      public  int j;
+    public BookSubjectAdapter(Activity activity, List<BookSubjectList> bookSubjectLists, String type) {
         this.activity = activity;
         this.type = type;
-        this.categoryLists = categoryLists;
+        this.bookSubjectLists = bookSubjectLists;
         method = new Method(activity, onClick);
+       // method.preferencess.setIntValue("json",j);
         Resources r = activity.getResources();
         float padding = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 3, r.getDisplayMetrics());
         columnWidth = (int) ((method.getScreenWidth() - ((5 + 3) * padding)));
@@ -115,7 +66,7 @@ public class BookTabAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_ITEM) {
-            View view = LayoutInflater.from(activity).inflate(R.layout.book_tab_item, parent, false);
+            View view = LayoutInflater.from(activity).inflate(R.layout.booksubject_item, parent, false);
             return new ViewHolder(view);
         } else if (viewType == VIEW_TYPE_LOADING) {
             View v = LayoutInflater.from(activity).inflate(R.layout.layout_loading_item, parent, false);
@@ -128,7 +79,8 @@ public class BookTabAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
+
 
         if (holder.getItemViewType() == VIEW_TYPE_ITEM) {
 
@@ -136,28 +88,47 @@ public class BookTabAdapter extends RecyclerView.Adapter {
 
             final ViewHolder viewHolder = (ViewHolder) holder;
 
-        //    viewHolder.constraintLayout.setLayoutParams(new CardView.LayoutParams(CardView.LayoutParams.MATCH_PARENT, columnWidth / 3));
 
-            viewHolder.textView_title.setText(categoryLists.get(position).getCategory_name());
+            viewHolder.title.setText(bookSubjectLists.get(position).getSubjTitle());
+
+            viewHolder.Subtitle.setText(bookSubjectLists.get(position).getSubjSubTitle());
+            Glide.with(activity).load(bookSubjectLists.get(position).getSubjImage())
+                    .placeholder(R.drawable.round_bg)
+                    .into(viewHolder.subjImage);
+
+            viewHolder.cardview.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ((FragmentActivity)activity).getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.frameLayout_main, new bookschapterFragment(bookSubjectLists.get(position).getSubjectsId(),bookSubjectLists.get(position).getSubjTitle(),bookSubjectLists.get(position).getSubjLangType()))
+                            .commit();
+                }
+            });
+
+            //    viewHolder.constraintLayout.setLayoutParams(new CardView.LayoutParams(CardView.LayoutParams.MATCH_PARENT, columnWidth / 3));
+
+       //     viewHolder.textView_title.setText(bookSubjectLists.get(position).getCategory_name());
 
             //category(viewHolder);
-            getMyId(activity,viewHolder);
+        //    Log.d("KINGSN item count", "onBindViewHolder: "+j+position);
+        //    getMyId(activity,viewHolder,position);
 
 
 
-          /*  String itemCount = activity.getResources().getString(R.string.items) + " " + "(" + categoryLists.get(position).getTotal_books() + ")";
+          /*  String itemCount = activity.getResources().getString(R.string.items) + " " + "(" + bookSubjectLists.get(position).getTotal_books() + ")";
             viewHolder.textViewItem.setText(itemCount);
 
-            Glide.with(activity).load(categoryLists.get(position).getCat_image_thumb())
+            Glide.with(activity).load(bookSubjectLists.get(position).getCat_image_thumb())
                     .placeholder(R.drawable.placeholder_portable)
                     .into(viewHolder.imageView);
 
-            viewHolder.constraintLayout.setOnClickListener(v -> method.onClickAd(position, type, categoryLists.get(position).getCid(), "", categoryLists.get(position).getCategory_name(), "", "", categoryLists.get(position).getSub_cat_status()));
+            viewHolder.constraintLayout.setOnClickListener(v -> method.onClickAd(position, type, bookSubjectLists.get(position).getCid(), "", bookSubjectLists.get(position).getCategory_name(), "", "", bookSubjectLists.get(position).getSub_cat_status()));
 */
-        } else if (holder.getItemViewType() == VIEW_TYPE_Ad) {
+        } /*else if (holder.getItemViewType() == VIEW_TYPE_Ad) {
             AdOption adOption = (AdOption) holder;
             if (adOption.conAdView.getChildCount() == 0) {
-                if (categoryLists.get(position).getNative_ad_type().equals("admob")) {
+                if (bookSubjectLists.get(position).getNative_ad_type().equals("admob")) {
 
                     @SuppressLint("InflateParams") View view = activity.getLayoutInflater().inflate(R.layout.admob_ad, null, true);
 
@@ -166,7 +137,7 @@ public class BookTabAdapter extends RecyclerView.Adapter {
                         ((ViewGroup) templateView.getParent()).removeView(templateView); // <- fix
                     }
                     adOption.conAdView.addView(templateView);
-                    AdLoader adLoader = new AdLoader.Builder(activity, categoryLists.get(position).getNative_ad_id())
+                    AdLoader adLoader = new AdLoader.Builder(activity, bookSubjectLists.get(position).getNative_ad_id())
                             .forNativeAd(nativeAd -> {
                                 NativeTemplateStyle styles = new
                                         NativeTemplateStyle.Builder()
@@ -190,11 +161,11 @@ public class BookTabAdapter extends RecyclerView.Adapter {
                                 .build();
                     }
                     adLoader.loadAd(adRequest);
-                } else if (categoryLists.get(position).getNative_ad_type().equals("facebook")) {
+                } else if (bookSubjectLists.get(position).getNative_ad_type().equals("facebook")) {
                     LayoutInflater inflater = LayoutInflater.from(activity);
                     LinearLayout adView = (LinearLayout) inflater.inflate(R.layout.native_ad_layout, adOption.conAdView, false);
 
-                    NativeAd nativeAd = new NativeAd(activity, categoryLists.get(position).getNative_ad_id());
+                    NativeAd nativeAd = new NativeAd(activity, bookSubjectLists.get(position).getNative_ad_id());
 
                     // Add the AdOptionsView
                     LinearLayout adChoicesContainer = adView.findViewById(R.id.ad_choices_container);
@@ -275,7 +246,7 @@ public class BookTabAdapter extends RecyclerView.Adapter {
 
                     // Request an ad
                     nativeAd.loadAd(nativeAd.buildLoadAdConfig().withAdListener(nativeAdListener).build());
-                } else if (categoryLists.get(position).getNative_ad_type().equals("startapp")) {
+                } else if (bookSubjectLists.get(position).getNative_ad_type().equals("startapp")) {
 
                     LayoutInflater inflater = LayoutInflater.from(activity);
                     CardView adView = (CardView) inflater.inflate(R.layout.native_start_item, adOption.conAdView, false);
@@ -315,10 +286,10 @@ public class BookTabAdapter extends RecyclerView.Adapter {
                             }
                         }
                     });
-                } else if (categoryLists.get(position).getNative_ad_type().equals("applovins")) {
+                } else if (bookSubjectLists.get(position).getNative_ad_type().equals("applovins")) {
                     LayoutInflater inflater = LayoutInflater.from(activity);
                     FrameLayout nativeAdLayout = (FrameLayout) inflater.inflate(R.layout.activity_native_max_template, adOption.conAdView, false);
-                    MaxNativeAdLoader nativeAdLoader = new MaxNativeAdLoader(categoryLists.get(position).getNative_ad_id(), activity);
+                    MaxNativeAdLoader nativeAdLoader = new MaxNativeAdLoader(bookSubjectLists.get(position).getNative_ad_id(), activity);
                     nativeAdLoader.loadAd();
                     nativeAdLoader.setNativeAdListener(new MaxNativeAdListener() {
                         @Override
@@ -342,12 +313,12 @@ public class BookTabAdapter extends RecyclerView.Adapter {
                     });
                 }
             }
-        }
+        }*/
     }
 
     @Override
     public int getItemCount() {
-        return categoryLists.size() + 1;
+        return bookSubjectLists.size() + 1;
     }
 
     public void hideHeader() {
@@ -356,30 +327,31 @@ public class BookTabAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemViewType(int position) {
-        if (categoryLists.size() == position) {
+        if (bookSubjectLists.size() == position) {
             return VIEW_TYPE_LOADING;
-        } else if (categoryLists.get(position).isIs_ads()) {
+        } /*else if (bookSubjectLists.get(position).isIs_ads()) {
             return VIEW_TYPE_Ad;
-        } else {
+        }*/ else {
             return VIEW_TYPE_ITEM;
         }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView imageView;
+        private ImageView subjImage;
         private ConstraintLayout constraintLayout;
-        private MaterialTextView textView_title, textViewItem;
+        private MaterialTextView title, Subtitle;
         private RecyclerView recyclerView_bookTab;
+        private CardView cardview;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
-           // imageView = itemView.findViewById(R.id.imageView_cat_adapter);
-            textView_title = itemView.findViewById(R.id.textView_title);
-           // textViewItem = itemView.findViewById(R.id.textView_item_cat_adapter);
-            constraintLayout = itemView.findViewById(R.id.con_BooktabMain);
-            recyclerView_bookTab = itemView.findViewById(R.id.recyclerView_bookTab);
+            subjImage = itemView.findViewById(R.id.subjImage);
+            title = itemView.findViewById(R.id.Title);
+            Subtitle = itemView.findViewById(R.id.Subtitle);
+            cardview = itemView.findViewById(R.id.cardview);
+           // recyclerView_bookTab = itemView.findViewById(R.id.recyclerView_bookTab);
         }
     }
 
@@ -389,6 +361,7 @@ public class BookTabAdapter extends RecyclerView.Adapter {
         public ProgressViewHolder(View v) {
             super(v);
             progressBar = v.findViewById(R.id.progressBar_loading);
+            progressBar.setVisibility(View.GONE);
         }
     }
 
@@ -405,52 +378,6 @@ public class BookTabAdapter extends RecyclerView.Adapter {
 
 
 
-    public void getMyId(Activity activity,ViewHolder viewholder) {
-        method.params.clear();
-        method.params.put("mobile","" );
-        // method.showToasty(activity,"1",""+GlobalVariables.adminUserID);
-        Log.d(GlobalVariables.TAG, "getHomeData2: called"+activity.toString());
-        new HttpsRequest(RestAPI.get_bookcategory, method.params, activity).stringPost2(GlobalVariables.TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, JSONObject abcdapp, String title, String message, JSONObject response) {
 
-                if (flag) {
-
-                    try {
-                        //  Log.d(GlobalVariables.TAG, "getIDhk:" + response.getJSONObject(GlobalVariables.AppSid).getJSONObject("Results").toString());
-
-
-                       my_id_dataArrayList1 = new ArrayList<>();
-                        Type getpetDTO = new TypeToken<List<BookSubCategoryList>>() {
-                        }.getType();
-                        my_id_dataArrayList1 =new Gson().fromJson(response.getJSONObject(GlobalVariables.AppSid).getJSONObject("category_list").getJSONArray("Life").toString(), getpetDTO);
-
-                        Log.d("KINGSH", "backResponse: "+my_id_dataArrayList1.get(0).getSubCategoryName());
-                        // setData();
-
-                        viewholder.recyclerView_bookTab.setHasFixedSize(true);
-                        RecyclerView.LayoutManager layoutManagerCat = new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false);
-                        viewholder. recyclerView_bookTab.setLayoutManager(layoutManagerCat);
-                        viewholder.recyclerView_bookTab.setFocusable(false);
-
-
-                        if (my_id_dataArrayList1.size() > 0) {
-
-                            categoryAdapterr = new MyHDataAdapter( my_id_dataArrayList1,activity);
-                            viewholder.recyclerView_bookTab.setAdapter(categoryAdapterr);
-                            viewholder.recyclerView_bookTab.setLayoutManager(new ScrollingLinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false, 7000));
-
-
-                        }
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-
-                }
-            }
-        });
-    }
 
 }

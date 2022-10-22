@@ -1,4 +1,4 @@
-package com.example.androidebookapp.fragment;
+package com.example.androidebookapp.fragment.bookfragments;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -15,6 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -25,20 +27,20 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.androidebookapp.R;
 import com.example.androidebookapp.activity.MainActivity;
 import com.example.androidebookapp.activity.SearchBook;
-import com.example.androidebookapp.adapter.SpinnerSubCatAdapter;
-import com.example.androidebookapp.adapter.SubCategoryAdapter;
+import com.example.androidebookapp.adapter.AuthorAdapter;
+import com.example.androidebookapp.adapter.SpinnerAuthorAdapter;
 import com.example.androidebookapp.interfaces.OnClick;
-import com.example.androidebookapp.item.SubCatSpinnerList;
-import com.example.androidebookapp.item.SubCategoryList;
-import com.example.androidebookapp.response.SubCatRP;
-import com.example.androidebookapp.response.SubCatSpinnerRP;
+import com.example.androidebookapp.item.AuthorList;
+import com.example.androidebookapp.item.AuthorSpinnerList;
+import com.example.androidebookapp.response.AuthorRP;
+import com.example.androidebookapp.response.AuthorSpinnerRP;
 import com.example.androidebookapp.rest.ApiClient;
 import com.example.androidebookapp.rest.ApiInterface;
 import com.example.androidebookapp.util.API;
@@ -59,18 +61,19 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SubCatBookFragment extends Fragment {
+public class AuthorFragment extends Fragment {
 
     private Method method;
     private OnClick onClick;
-    private String id, title;
-    private String subCatType, subCatId;
+    private String authorType, authorId;
     private ProgressBar progressBar;
-    private ConstraintLayout conSubCat;
+    private List<AuthorList> authorLists;
+    private ConstraintLayout conNoData;
     private RecyclerView recyclerView;
-    private List<SubCategoryList> subCategoryLists;
-    private SubCategoryAdapter subCategoryAdapter;
+    private AuthorAdapter authorAdapter;
+    private LayoutAnimationController animation;
     private Boolean isOver = false;
+    private String adsParam = "1";
     private int paginationIndex = 1;
     private InputMethodManager imm;
 
@@ -78,43 +81,52 @@ public class SubCatBookFragment extends Fragment {
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.subcat_book_fragment, container, false);
-
-        assert getArguments() != null;
-        id = getArguments().getString("id");
-        title = getArguments().getString("title");
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.author_fragment, container, false);
 
         if (MainActivity.toolbar != null) {
-            MainActivity.toolbar.setTitle(title);
+            MainActivity.toolbar.setTitle(getResources().getString(R.string.author));
         }
-
-        subCategoryLists = new ArrayList<>();
 
         imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
+        authorLists = new ArrayList<>();
+
+        int resId = R.anim.layout_animation_fall_down;
+        animation = AnimationUtils.loadLayoutAnimation(getActivity(), resId);
+
         onClick = (position, type, id, subId, title, fileType, fileUrl, otherData) -> {
-            BookFragment bookFragment = new BookFragment();
+            AuthorBookFragment authorBookFragment = new AuthorBookFragment();
             Bundle bundle = new Bundle();
-            bundle.putString("type", type);
             bundle.putString("title", title);
             bundle.putString("id", id);
-            bundle.putString("subId", subId);
-            bookFragment.setArguments(bundle);
-            getChildFragmentManager().beginTransaction().replace(R.id.frameLayout_subCatBook_fragment,
-                    bookFragment, title).commitAllowingStateLoss();
+            bundle.putString("type", type);
+            authorBookFragment.setArguments(bundle);
+            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frameLayout_main, authorBookFragment,
+                    title).addToBackStack(title).commitAllowingStateLoss();
         };
 
         method = new Method(getActivity(), onClick);
 
-        progressBar = view.findViewById(R.id.progressbar_subCatBook_fragment);
-        conSubCat = view.findViewById(R.id.con_subCatBook_fragment);
-        recyclerView = view.findViewById(R.id.recyclerView_subCatBook_fragment);
+        conNoData = view.findViewById(R.id.con_noDataFound);
+        progressBar = view.findViewById(R.id.progressbar_author_fragment);
+        recyclerView = view.findViewById(R.id.recyclerView_author_fragment);
 
+        conNoData.setVisibility(View.GONE);
         progressBar.setVisibility(View.GONE);
 
         recyclerView.setHasFixedSize(true);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false);
+        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 3);
+        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if (authorAdapter.getItemViewType(position) == 1) {
+                    return 1;
+                } else {
+                    return 3;
+                }
+            }
+        });
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setFocusable(false);
 
@@ -127,22 +139,12 @@ public class SubCatBookFragment extends Fragment {
                         callData();
                     }, 1000);
                 } else {
-                    subCategoryAdapter.hideHeader();
+                    authorAdapter.hideHeader();
                 }
             }
         });
 
         callData();
-
-        BookFragment bookFragment = new BookFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString("type", "subCategory");
-        bundle.putString("title", title);
-        bundle.putString("id", id);
-        bundle.putString("subId", "0");
-        bookFragment.setArguments(bundle);
-        getChildFragmentManager().beginTransaction().replace(R.id.frameLayout_subCatBook_fragment,
-                bookFragment, title).commitAllowingStateLoss();
 
         setHasOptionsMenu(true);
         return view;
@@ -150,7 +152,7 @@ public class SubCatBookFragment extends Fragment {
 
     private void callData() {
         if (method.isNetworkAvailable()) {
-            subCategory();
+            author();
         } else {
             method.alertBox(getResources().getString(R.string.internet_connection));
         }
@@ -162,13 +164,13 @@ public class SubCatBookFragment extends Fragment {
         inflater.inflate(R.menu.search_more, menu);
         MenuItem searchItem = menu.findItem(R.id.ic_search);
         searchItem.setOnMenuItemClickListener(item -> {
-            subCategoryName();
+            authorName();
             return false;
         });
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    private void subCategoryName() {
+    private void authorName() {
 
         if (getActivity() != null) {
 
@@ -178,24 +180,23 @@ public class SubCatBookFragment extends Fragment {
             progressDialog.setCancelable(false);
 
             JsonObject jsObj = (JsonObject) new Gson().toJsonTree(new API(getActivity()));
-            jsObj.addProperty("cat_id", id);
-            jsObj.addProperty("method_name", "get_sub_cat_name");
+            jsObj.addProperty("method_name", "get_author_name");
             ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-            Call<SubCatSpinnerRP> call = apiService.getSubCatSpinner(API.toBase64(jsObj.toString()));
-            call.enqueue(new Callback<SubCatSpinnerRP>() {
+            Call<AuthorSpinnerRP> call = apiService.getAuthorSpinner(API.toBase64(jsObj.toString()));
+            call.enqueue(new Callback<AuthorSpinnerRP>() {
                 @Override
-                public void onResponse(@NotNull Call<SubCatSpinnerRP> call, @NotNull Response<SubCatSpinnerRP> response) {
+                public void onResponse(@NotNull Call<AuthorSpinnerRP> call, @NotNull Response<AuthorSpinnerRP> response) {
 
                     if (getActivity() != null) {
 
                         try {
 
-                            SubCatSpinnerRP subCatSpinnerRP = response.body();
-                            assert subCatSpinnerRP != null;
-                            if (subCatSpinnerRP.getStatus().equals("1")) {
-                                showSearch(subCatSpinnerRP);
+                            AuthorSpinnerRP authorSpinnerRP = response.body();
+                            assert authorSpinnerRP != null;
+                            if (authorSpinnerRP.getStatus().equals("1")) {
+                                showSearch(authorSpinnerRP);
                             } else {
-                                method.alertBox(subCatSpinnerRP.getMessage());
+                                method.alertBox(authorSpinnerRP.getMessage());
                             }
                         } catch (Exception e) {
                             Log.d("exception_error", e.toString());
@@ -203,13 +204,12 @@ public class SubCatBookFragment extends Fragment {
                         }
 
                     }
-
                     progressDialog.dismiss();
 
                 }
 
                 @Override
-                public void onFailure(@NotNull Call<SubCatSpinnerRP> call, @NotNull Throwable t) {
+                public void onFailure(@NotNull Call<AuthorSpinnerRP> call, @NotNull Throwable t) {
                     // Log error here since request failed
                     Log.e("fail", t.toString());
                     progressDialog.dismiss();
@@ -221,7 +221,7 @@ public class SubCatBookFragment extends Fragment {
 
     }
 
-    private void showSearch(SubCatSpinnerRP subCatSpinnerRP) {
+    private void showSearch(AuthorSpinnerRP authorSpinnerRP) {
 
         Dialog dialog = new Dialog(requireActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -238,12 +238,12 @@ public class SubCatBookFragment extends Fragment {
         TextInputEditText editText = dialog.findViewById(R.id.editText_search_dialog);
         MaterialButton button = dialog.findViewById(R.id.button_search_dialog);
 
-        textViewTitle.setText(getResources().getString(R.string.search_sub_cat));
+        textViewTitle.setText(getResources().getString(R.string.search_author));
         editText.setHint(getResources().getString(R.string.search_book_name));
 
-        subCatSpinnerRP.getSubCatSpinnerLists().add(0, new SubCatSpinnerList("", getResources().getString(R.string.select_sub_category_type)));
+        authorSpinnerRP.getAuthorSpinnerLists().add(0, new AuthorSpinnerList("", getResources().getString(R.string.select_author_type)));
 
-        SpinnerSubCatAdapter typeAdapter = new SpinnerSubCatAdapter(getActivity(), subCatSpinnerRP.getSubCatSpinnerLists());
+        SpinnerAuthorAdapter typeAdapter = new SpinnerAuthorAdapter(getActivity(), authorSpinnerRP.getAuthorSpinnerLists());
         spinnerAuthor.setAdapter(typeAdapter);
 
         spinnerAuthor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -254,8 +254,8 @@ public class SubCatBookFragment extends Fragment {
                 } else {
                     ((TextView) parent.getChildAt(0)).setTextColor(getResources().getColor(R.color.textView_app_color));
                 }
-                subCatType = subCatSpinnerRP.getSubCatSpinnerLists().get(position).getSub_cat_name();
-                subCatId = subCatSpinnerRP.getSubCatSpinnerLists().get(position).getSid();
+                authorType = authorSpinnerRP.getAuthorSpinnerLists().get(position).getAuthor_name();
+                authorId = authorSpinnerRP.getAuthorSpinnerLists().get(position).getId();
             }
 
             @Override
@@ -270,9 +270,9 @@ public class SubCatBookFragment extends Fragment {
             editText.setError(null);
 
             String search = editText.getText().toString();
-            if (subCatType.equals(getResources().getString(R.string.select_sub_category_type)) || subCatType.equals("") || subCatType.isEmpty()) {
-                method.alertBox(getResources().getString(R.string.please_select_sub_category));
-            } else if (search.isEmpty() || search.equals("")) {
+            if (authorType.equals(getResources().getString(R.string.select_author_type)) || authorType.equals("") || authorType.isEmpty()) {
+                method.alertBox(getResources().getString(R.string.please_select_author));
+            } else if (search.isEmpty()) {
                 editText.requestFocus();
                 editText.setError(getResources().getString(R.string.please_enter_book));
             } else {
@@ -281,9 +281,9 @@ public class SubCatBookFragment extends Fragment {
                 imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
 
                 Intent intent = new Intent(requireActivity(), SearchBook.class);
-                intent.putExtra("id", subCatId);
+                intent.putExtra("id", authorId);
                 intent.putExtra("search", search);
-                intent.putExtra("type", "sub_category_search");
+                intent.putExtra("type", "author_search");
                 startActivity(intent);
                 dialog.dismiss();
             }
@@ -291,57 +291,60 @@ public class SubCatBookFragment extends Fragment {
         dialog.show();
     }
 
-    private void subCategory() {
+    private void author() {
 
         if (getActivity() != null) {
 
-            if (subCategoryAdapter == null) {
-                subCategoryLists.clear();
+            if (authorAdapter == null) {
+                authorLists.clear();
                 progressBar.setVisibility(View.VISIBLE);
             }
 
             JsonObject jsObj = (JsonObject) new Gson().toJsonTree(new API(getActivity()));
-            jsObj.addProperty("cat_id", id);
+            jsObj.addProperty("ads_param", adsParam);
             jsObj.addProperty("page", paginationIndex);
-            jsObj.addProperty("method_name", "get_sub_category");
+            jsObj.addProperty("method_name", "get_author");
             ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-            Call<SubCatRP> call = apiService.getSubCategory(API.toBase64(jsObj.toString()));
-            call.enqueue(new Callback<SubCatRP>() {
+            Call<AuthorRP> call = apiService.getAuthor(API.toBase64(jsObj.toString()));
+            call.enqueue(new Callback<AuthorRP>() {
                 @Override
-                public void onResponse(@NotNull Call<SubCatRP> call, @NotNull Response<SubCatRP> response) {
+                public void onResponse(@NotNull Call<AuthorRP> call, @NotNull Response<AuthorRP> response) {
 
                     if (getActivity() != null) {
 
                         try {
 
-                            SubCatRP subCatRP = response.body();
-                            assert subCatRP != null;
+                            AuthorRP authorRP = response.body();
+                            assert authorRP != null;
 
-                            if (subCatRP.getStatus().equals("1")) {
+                            if (authorRP.getStatus().equals("1")) {
 
-                                if (subCatRP.getSubCategoryLists().size() == 0) {
-                                    if (subCategoryAdapter != null) {
-                                        subCategoryAdapter.hideHeader();
+                                adsParam = authorRP.getAds_param();
+
+                                if (authorRP.getAuthorLists().size() == 0) {
+                                    if (authorAdapter != null) {
+                                        authorAdapter.hideHeader();
                                         isOver = true;
                                     }
                                 } else {
-                                    subCategoryLists.addAll(subCatRP.getSubCategoryLists());
+                                    authorLists.addAll(authorRP.getAuthorLists());
                                 }
 
-                                if (subCategoryAdapter == null) {
-                                    if (subCategoryLists.size() == 0) {
-                                        conSubCat.setVisibility(View.GONE);
+                                if (authorAdapter == null) {
+                                    if (authorLists.size() == 0) {
+                                        conNoData.setVisibility(View.VISIBLE);
                                     } else {
-                                        conSubCat.setVisibility(View.VISIBLE);
-                                        subCategoryAdapter = new SubCategoryAdapter(getActivity(), subCategoryLists, "subCategory", onClick);
-                                        recyclerView.setAdapter(subCategoryAdapter);
+                                        authorAdapter = new AuthorAdapter(getActivity(), authorLists, "author", onClick);
+                                        recyclerView.setAdapter(authorAdapter);
+                                        recyclerView.setLayoutAnimation(animation);
                                     }
                                 } else {
-                                    subCategoryAdapter.notifyDataSetChanged();
+                                    authorAdapter.notifyDataSetChanged();
                                 }
 
                             } else {
-                                method.alertBox(subCatRP.getMessage());
+                                conNoData.setVisibility(View.VISIBLE);
+                                method.alertBox(authorRP.getMessage());
                             }
 
                         } catch (Exception e) {
@@ -352,11 +355,10 @@ public class SubCatBookFragment extends Fragment {
                     }
 
                     progressBar.setVisibility(View.GONE);
-
                 }
 
                 @Override
-                public void onFailure(@NotNull Call<SubCatRP> call, @NotNull Throwable t) {
+                public void onFailure(@NotNull Call<AuthorRP> call, @NotNull Throwable t) {
                     // Log error here since request failed
                     Log.e("fail", t.toString());
                     progressBar.setVisibility(View.GONE);
