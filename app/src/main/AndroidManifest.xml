@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.androidebookapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -7,6 +8,10 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <queries>
+        <package android:name="com.facebook.katana" />
+    </queries>
 
     <application
         android:name="com.example.androidebookapp.util.YouApplication"
@@ -20,6 +25,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+
         <activity
             android:name="com.example.androidebookapp.activity.SplashScreen"
             android:label="@string/app_name"
@@ -44,7 +50,6 @@
                     android:host="@string/get_host"
                     android:pathPrefix="@string/get_pathPrefix"
                     android:scheme="@string/get_scheme" />
-
             </intent-filter>
         </activity>
         <activity android:name="com.example.androidebookapp.activity.Login" />
@@ -71,6 +76,16 @@
         <activity android:name="com.example.androidebookapp.activity.PDFShow" />
         <activity android:name="com.example.androidebookapp.activity.Faq" />
         <activity android:name="com.example.androidebookapp.activity.ContactUs" />
+        <activity
+            android:name="com.example.androidebookapp.activity.BookSubjectActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.example.androidebookapp.activity.QuizChapterActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.example.androidebookapp.activity.BookViewActivity"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name="com.google.android.gms.ads.AdActivity"
@@ -80,11 +95,9 @@
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="@string/admob_id" />
-
         <meta-data
             android:name="applovin.sdk.key"
             android:value="@string/applovin_sdk_key" />
-
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -113,11 +126,6 @@
         <service
             android:name="com.example.androidebookapp.service.DownloadService"
             android:exported="false" />
-
     </application>
-
-    <queries>
-        <package android:name="com.facebook.katana" />
-    </queries>
 
 </manifest>

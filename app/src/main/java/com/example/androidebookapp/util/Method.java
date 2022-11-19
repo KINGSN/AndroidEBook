@@ -111,6 +111,8 @@ public class Method {
         this.activity = activity;
         pref = activity.getSharedPreferences(myPreference, 0); // 0 - for private mode
         editor = pref.edit();
+
+
     }
 
     @SuppressLint("CommitPrefEdits")

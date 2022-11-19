@@ -70,7 +70,8 @@ public class DownloadFragment extends Fragment {
 
         onClick = (position, type, id, subId, title, fileType, fileUrl, otherData) -> {
             if (fileUrl.contains(".epub")) {
-                FolioReader folioReader = FolioReader.get();
+                FolioReader folioReader=FolioReader.get();
+            /*    FolioReader folioReader = FolioReader.get();*/
                 folioReader.setOnHighlightListener((highlight, type1) -> {
 
                 });

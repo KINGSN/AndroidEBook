@@ -60,6 +60,10 @@ public class BookitemList implements Serializable {
     @Expose
     private String status;
 
+    @SerializedName("is_fav")
+    @Expose
+    private String is_fav;
+
     public String getId() {
         return id;
     }
@@ -194,5 +198,13 @@ public class BookitemList implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getIs_fav() {
+        return is_fav;
+    }
+
+    public void setIs_fav(String is_fav) {
+        this.is_fav = is_fav;
     }
 }

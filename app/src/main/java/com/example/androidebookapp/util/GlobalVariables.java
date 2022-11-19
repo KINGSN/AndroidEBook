@@ -2,6 +2,7 @@ package com.example.androidebookapp.util;
 
 
 import com.example.androidebookapp.item.CategoryList;
+import com.example.androidebookapp.item.QuizCategoryList;
 
 import java.util.List;
 
@@ -276,6 +277,18 @@ public class GlobalVariables {
     public static  String CATEGORY_ID = "category_id";
 
     public static List<CategoryList> categoryLists ;
+    public static List<QuizCategoryList> quizCategoryLists;
+
+    public static String PROGRESS_COLOR = "#606899"; // change progress color in play area while choose audience pole
+    public static String PROGRESS_BG_COLOR = "#d8d8d8";
+    public static int PROGRESS_TEXT_SIZE=13;
+    public static int PROGRESS_STROKE_WIDTH=6;
+    public static int RESULT_PROGRESS_STROKE_WIDTH=10;
+    public static int RESULT_PROGRESS_TEXT_SIZE=20;
+    public static int AUD_PROGRESS_STROKE_WIDTH=5;
+    public static int AUD_PROGRESS_TEXT_SIZE=10;
+    public static String AUD_PROGRESS_COLOR = "#393d5a";
+    public static String AUD_PROGRESS_BG_COLOR = "#d8d8d8";
 
 
 }

@@ -95,6 +95,7 @@ public class CategoryFragment extends Fragment {
 
         categoryLists = new ArrayList<>();
 
+
         onClick = (position, type, id, subId, title, fileType, fileUrl, otherData) -> {
             if (otherData.equals("true")) {
                 SubCatBookFragment subCatBookFragment = new SubCatBookFragment();

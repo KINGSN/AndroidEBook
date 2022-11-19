@@ -66,7 +66,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BookTabAdapter extends RecyclerView.Adapter {
+public class BookHomeAdapter extends RecyclerView.Adapter {
 
     public BookTabItemBinding binding;
     private Method method;
@@ -76,8 +76,8 @@ public class BookTabAdapter extends RecyclerView.Adapter {
     private List<CategoryList> categoryLists;
     public ArrayList<BookSubCategoryList> my_id_dataArrayList1;
     private OnClick onClick;
-    private BookTabAdapter categoryAdapter;
-    public MyHDataAdapter categoryAdapterr;
+    private BookHomeAdapter categoryAdapter;
+    public BookSubCatAdapter categoryAdapterr;
     private Boolean isOver = false;
     private int paginationIndex = 1;
     private String adsParam = "1";
@@ -88,13 +88,13 @@ public class BookTabAdapter extends RecyclerView.Adapter {
     private final int VIEW_TYPE_ITEM = 1;
     private final int VIEW_TYPE_Ad = 2;
       public  int j;
-    public BookTabAdapter(Activity activity, List<CategoryList> categoryLists,int i, String type, OnClick onClick) {
+    public BookHomeAdapter(Activity activity, List<CategoryList> categoryLists, int i, String type, OnClick onClick) {
         this.activity = activity;
         this.type = type;
         this.categoryLists = categoryLists;
         this.j=i;
         CategoryN=GlobalVariables.categoryLists.get(j).getCategory_name();
-        Log.d("kingsn", "BookTabAdapter: "+j+"\n"+CategoryN);
+        Log.d("kingsn", "BookHomeAdapter: "+j+"\n"+CategoryN);
         method = new Method(activity, onClick);
        // method.preferencess.setIntValue("json",j);
         Resources r = activity.getResources();
@@ -446,7 +446,7 @@ public class BookTabAdapter extends RecyclerView.Adapter {
 
                         if (my_id_dataArrayList1.size() > 0) {
 
-                            categoryAdapterr = new MyHDataAdapter( my_id_dataArrayList1,activity);
+                            categoryAdapterr = new BookSubCatAdapter( my_id_dataArrayList1,activity);
                             viewholder.recyclerView_bookTab.setAdapter(categoryAdapterr);
                           /*  viewholder.recyclerView_bookTab.setLayoutManager(new ScrollingLinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false, 7000));
 */
@@ -455,6 +455,7 @@ public class BookTabAdapter extends RecyclerView.Adapter {
                             viewholder.recyclerView_bookTab.setFocusable(false);
 
                         }
+                        hideHeader();
 
                     } catch (Exception e) {
                         e.printStackTrace();

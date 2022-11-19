@@ -401,6 +401,16 @@ public class HomeFragment extends Fragment {
                                     conCategory.setVisibility(View.GONE);
                                 }
 
+                                if (homeRP.getQuizcategoryLists().size() != 0) {
+                                   /* homeCatAdapter = new HomeCatAdapter(getActivity(), homeRP.getCategoryLists(), "home_cat", onClick);
+                                    recyclerViewCat.setAdapter(homeCatAdapter);*/
+                                    GlobalVariables.quizCategoryLists= homeRP.getQuizcategoryLists();
+
+                                    Log.d("KINGSN", "onResponse: "+GlobalVariables.categoryLists.get(0).getCategory_name().toString());
+                                } /*else {
+                                    conCategory.setVisibility(View.GONE);
+                                }*/
+
                                 if (homeRP.getLatestList().size() != 0) {
                                     latestAdapter = new BookHomeAdapter(getActivity(), homeRP.getLatestList(), "home_latest", onClick);
                                     recyclerViewLatest.setAdapter(latestAdapter);

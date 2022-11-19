@@ -2,6 +2,7 @@ package com.example.androidebookapp.fragment.subjectTabFragment;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.example.androidebookapp.adapter.booksdapter.BookSubjectAdapter;
 import com.example.androidebookapp.databinding.FragmentSubjectTabBinding;
 import com.example.androidebookapp.https.HttpsRequest;
 import com.example.androidebookapp.item.BookSubjectList;
+import com.example.androidebookapp.util.EndlessRecyclerViewScrollListener;
 import com.example.androidebookapp.util.GlobalVariables;
 import com.example.androidebookapp.util.Method;
 import com.example.androidebookapp.util.RestAPI;
@@ -28,6 +30,7 @@ import org.json.JSONObject;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class subjectTabFragmentHn extends Fragment {
 
@@ -37,17 +40,19 @@ public class subjectTabFragmentHn extends Fragment {
     public ArrayList<BookSubjectList> my_id_dataArrayList;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    public String Language;
-
+    public String Language,subjecttype,Subject_name;
+    private Boolean isOver = false;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
     String SubCat;
-
-    public subjectTabFragmentHn(String Lang, String subcategory) {
+    private int paginationIndex = 1;
+    public subjectTabFragmentHn(String Lang, String subcategory,String subjectType,String SubjectName) {
         // Required empty public constructor
         this.Language=Lang;
         this.SubCat=subcategory;
+        subjecttype=subjectType;
+        Subject_name=SubjectName;
     }
 
 
@@ -59,21 +64,52 @@ public class subjectTabFragmentHn extends Fragment {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_subject_tab, container, false);
 
         binding = FragmentSubjectTabBinding.inflate(inflater, container, false);
+        binding.invalidateAll();
         view = binding.getRoot();
 
-        getMyId(requireActivity());
+        binding.recycleview.setHasFixedSize(true);
+        //   GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 3);
+        RecyclerView.LayoutManager layoutManagerAuthor = new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false);
+
+        binding.recycleview.setLayoutManager(layoutManagerAuthor);
+        binding.recycleview.setFocusable(false);
+
+        binding.recycleview.addOnScrollListener(new EndlessRecyclerViewScrollListener((LinearLayoutManager) layoutManagerAuthor) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount) {
+                if (!isOver) {
+                    new Handler().postDelayed(() -> {
+                        paginationIndex++;
+                        if(subjecttype=="QuizSubjectActivity"){
+                            getMyId(requireActivity(),RestAPI.get_QuizSubjects);
+                        }else{
+                            getMyId(requireActivity(),RestAPI.get_bookSubjects);
+                        }
+                    }, 1000);
+                } else {
+                    BookSubjectAdapter.hideHeader();
+                }
+            }
+        });
+
+        if(Objects.equals(subjecttype, "QuizSubjectActivity")){
+            getMyId(requireActivity(),RestAPI.get_QuizSubjects);
+        }else{
+            getMyId(requireActivity(),RestAPI.get_bookSubjects);
+        }
 
         return view;
     }
 
-    public void getMyId(Activity activity) {
+    public void getMyId(Activity activity,String Api) {
+        binding.progressBarHome.setVisibility(View.VISIBLE);
         Log.d("KINGSHIN", "getMyId:subjecttabfrag ");
        method.params.clear();
-       method.params.put("languageType","1" );
+       method.params.put("languageType","2" );
        method.params.put("Subcategory",SubCat );
         // method.showToasty(activity,"1",""+GlobalVariables.adminUserID);
         Log.d(GlobalVariables.TAG, "getHomeData2: called"+activity.toString());
-        new HttpsRequest(RestAPI.get_bookSubjects, method.params, activity).stringPost2(GlobalVariables.TAG, new Helper() {
+        new HttpsRequest(Api, method.params, activity).stringPost2(GlobalVariables.TAG, new Helper() {
             @Override
             public void backResponse(boolean flag, JSONObject abcdapp, String title, String message, JSONObject response) {
                 //  ProjectUtils.pauseProgressDialog();
@@ -86,7 +122,7 @@ public class subjectTabFragmentHn extends Fragment {
                     try {
                         //  Log.d(GlobalVariables.TAG, "getIDhk:" + response.getJSONObject(GlobalVariables.AppSid).getJSONObject("Results").toString());
 
-
+                        //my_id_dataArrayList.clear();
                         my_id_dataArrayList = new ArrayList<>();
                         Type getpetDTO = new TypeToken<List<BookSubjectList>>() {
                         }.getType();
@@ -100,7 +136,7 @@ public class subjectTabFragmentHn extends Fragment {
                         if (my_id_dataArrayList.size() > 0) {
 
 
-                            bookSubjectAdapter = new BookSubjectAdapter(activity,my_id_dataArrayList,"eng");
+                            bookSubjectAdapter = new BookSubjectAdapter(activity,my_id_dataArrayList,"eng",subjecttype);
                             RecyclerView.LayoutManager layoutManagerAuthor = new LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false);
                             binding.recycleview.setLayoutManager(layoutManagerAuthor);
                             binding.recycleview.setFocusable(false);
@@ -111,7 +147,7 @@ public class subjectTabFragmentHn extends Fragment {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
+                    binding.progressBarHome.setVisibility(View.GONE);
 
                 } else {
 

@@ -3,6 +3,7 @@ package com.example.androidebookapp.response;
 import com.example.androidebookapp.item.AuthorList;
 import com.example.androidebookapp.item.BookList;
 import com.example.androidebookapp.item.CategoryList;
+import com.example.androidebookapp.item.QuizCategoryList;
 import com.example.androidebookapp.item.SliderList;
 import com.google.gson.annotations.SerializedName;
 
@@ -31,6 +32,9 @@ public class HomeRP implements Serializable {
 
     @SerializedName("category_list")
     private List<CategoryList> categoryLists;
+
+    @SerializedName("quizcategory_list")
+    private List<QuizCategoryList> quizcategoryLists;
 
     @SerializedName("author_list")
     private List<AuthorList> authorLists;
@@ -61,6 +65,14 @@ public class HomeRP implements Serializable {
 
     public List<CategoryList> getCategoryLists() {
         return categoryLists;
+    }
+
+    public List<QuizCategoryList> getQuizcategoryLists() {
+        return quizcategoryLists;
+    }
+
+    public void setQuizcategoryLists(List<QuizCategoryList> quizcategoryLists) {
+        this.quizcategoryLists = quizcategoryLists;
     }
 
     public List<AuthorList> getAuthorLists() {

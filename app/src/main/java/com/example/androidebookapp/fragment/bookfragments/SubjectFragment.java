@@ -110,7 +110,7 @@ public class SubjectFragment extends Fragment {
 
         method = new Method(getActivity(), onClick);
 
-     subjectTabAdapter=new SubjectTabAdapter(requireActivity(),getActivity().getSupportFragmentManager(),getLifecycle(),sid);
+    // subjectTabAdapter=new SubjectTabAdapter(requireActivity(),getActivity().getSupportFragmentManager(),getLifecycle(),sid);
 
         viewPager= binding.viewPager;
 

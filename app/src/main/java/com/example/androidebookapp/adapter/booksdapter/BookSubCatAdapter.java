@@ -17,13 +17,13 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.androidebookapp.R;
+import com.example.androidebookapp.activity.BookSubjectActivity;
 import com.example.androidebookapp.databinding.HdataAdapterBinding;
 import com.example.androidebookapp.fragment.bookfragments.SubjectFragment;
 import com.example.androidebookapp.item.BookSubCategoryList;
@@ -32,7 +32,7 @@ import com.example.androidebookapp.util.Method;
 import java.util.ArrayList;
 
 
-public class MyHDataAdapter extends RecyclerView.Adapter<MyHDataAdapter.MyViewHolder> {
+public class BookSubCatAdapter extends RecyclerView.Adapter<BookSubCatAdapter.MyViewHolder> {
 
 
     //private static final String GlobalVariables.TAG="RecyclerAdapter";
@@ -49,7 +49,7 @@ public class MyHDataAdapter extends RecyclerView.Adapter<MyHDataAdapter.MyViewHo
     private int columnWidth;
 
     // int count=0;
-    public MyHDataAdapter(ArrayList<BookSubCategoryList> myId_data, Activity context) {
+    public BookSubCatAdapter(ArrayList<BookSubCategoryList> myId_data, Activity context) {
         this.myId_data = myId_data;
         this.context = context;
 
@@ -104,24 +104,18 @@ public class MyHDataAdapter extends RecyclerView.Adapter<MyHDataAdapter.MyViewHo
 
 
 
-        holder.binding.icon.setOnClickListener(new View.OnClickListener() {
+        holder.binding.mainl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
               //  method.copyToclipboard1(context,holder.binding.idName);
                 Log.d("KINGSN", "onClick:SID "+myId_data.get(position).getSid());
 
-                ((FragmentActivity)context).getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.frameLayout_main, new SubjectFragment(myId_data.get(position).getSid()))
-                                .commit();
 
-              /*  FragmentTransaction transaction =  ((FragmentActivity)context).getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.frameLayout_main, IdsFragment,
-                        IdsFragment.getClass().getSimpleName());
-                transaction.addToBackStack(null);
-                transaction.commit();*/
 
-             //   activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, IdsFragment).addToBackStack(null).commit();
+                Intent intent = new Intent(context, BookSubjectActivity.class);
+                intent.putExtra("screenType","BookSubjectActivity");
+                intent.putExtra("Sid", myId_data.get(position).getSid());
+                context.startActivity(intent);
 
 
 

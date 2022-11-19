@@ -73,7 +73,7 @@ private BookViewItemBinding binding;
        /* preferences = parent.getContext().getSharedPreferences(GlobalVariables.ADMIN_PREF, MODE_PRIVATE);
         editor = preferences.edit();
         IdsFragment=new IdsFragment();*/
-           // return new MyHDataAdapter.MyViewHolder(binding);
+           // return new BookSubCatAdapter.MyViewHolder(binding);
           //  return new BookViewAdapter.MyViewHolder(binding);
         } else if (viewType == VIEW_TYPE_LOADING) {
             View v = LayoutInflater.from(activity).inflate(R.layout.layout_loading_item, parent, false);

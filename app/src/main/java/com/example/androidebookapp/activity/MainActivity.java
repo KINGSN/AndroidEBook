@@ -30,6 +30,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GravityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.androidebookapp.BuildConfig;
 import com.example.androidebookapp.R;
@@ -37,13 +39,14 @@ import com.example.androidebookapp.databinding.ActivityMainBinding;
 import com.example.androidebookapp.fragment.bookfragments.AuthorBookFragment;
 import com.example.androidebookapp.fragment.bookfragments.AuthorFragment;
 import com.example.androidebookapp.fragment.bookfragments.BookFragment;
-import com.example.androidebookapp.fragment.bookfragments.BooksTabFragment;
+import com.example.androidebookapp.fragment.BooksHomeFragment;
 import com.example.androidebookapp.fragment.bookfragments.CategoryFragment;
 import com.example.androidebookapp.fragment.DownloadFragment;
 import com.example.androidebookapp.fragment.HomeFragment;
 import com.example.androidebookapp.fragment.ProfileFragment;
 import com.example.androidebookapp.fragment.SettingFragment;
 import com.example.androidebookapp.fragment.bookfragments.SubCatBookFragment;
+import com.example.androidebookapp.fragment.quizFragment.QuizHomeFragment;
 import com.example.androidebookapp.response.AppRP;
 import com.example.androidebookapp.rest.ApiClient;
 import com.example.androidebookapp.rest.ApiInterface;
@@ -111,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-       // setContentView(R.layout.activity_main);
+        // setContentView(R.layout.activity_main);
 
         try {
             PackageInfo info = getPackageManager().getPackageInfo(
@@ -175,28 +178,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onTabSelected(@IdRes int tabId) {
                 if (tabId == R.id.tab_home) {
-                    selectDrawerItem(0);
+                    // selectDrawerItem(0);
                     backStackRemove();
-                    getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout_main, new HomeFragment(),
-                            getResources().getString(R.string.home)).commitAllowingStateLoss();
+                  /*  getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout_main, new HomeFragment(),
+                            getResources().getString(R.string.home)).commitAllowingStateLoss();*/
+                    //  loadFragment(HomeFragment,"Home");
+                    // CURRENT_TAG = TAG_HOME;
+                    loadFragment(new HomeFragment(), "Home");
                 }
-               /* if (tabId == R.id.tab_category) {
-                    displaySelectedFragment(new CategoryFragment());
-                }*/
-                if (tabId == R.id.tab_book) {
-                   // displaySelectedFragment(new DownloadFragment());
+                if (tabId == R.id.tab_quiz) {
 
-                    selectDrawerItem(3);
-                    backStackRemove();
-                    getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout_main, new BooksTabFragment(),
-                            getResources().getString(R.string.home)).commitAllowingStateLoss();
-                }else{
+                    loadFragment(new QuizHomeFragment(), "Quiz");
+                }
+
+                if (tabId == R.id.tab_book) {
+
+                    loadFragment(new BooksHomeFragment(), "Book");
+                } else {
                     selectDrawerItem(0);
 
                 }
               /*  if (tabId == R.id.tab_setting) {
                     displaySelectedFragment(new SettingsFragment());
                 }*/
+
             }
         });
 
@@ -220,6 +225,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -228,7 +234,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             if (doubleBackToExitPressedOnce) {
                 super.onBackPressed();
-            } else {
+                selectDrawerItem(0);
+            } else if(binding.bottombar.getCurrentTabId()!=R.id.tab_home){
+                // binding.bottombar.getTabAtPosition(0);
+                binding.bottombar.selectTabAtPosition(0);
+                //  loadFragment(new HomeFragment(), "Home");
+            }else {
                 if (getSupportFragmentManager().getBackStackEntryCount() != 0) {
                     String title = getSupportFragmentManager().getFragments().get(getSupportFragmentManager().getBackStackEntryCount() - 1).getTag();
                     if (title != null) {
@@ -253,6 +264,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (getCurrentFocus() != null) {
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
         }
+
 
         // Handle navigation view item clicks here.
         item.setChecked(!item.isChecked());
@@ -590,5 +602,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onDestroy();
     }
 
+    public void loadFragment(final Fragment fragment, final String TAG) {
+
+
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
+                android.R.anim.fade_out);
+        fragmentTransaction.replace(R.id.frameLayout_main, fragment, TAG);
+        fragmentTransaction.commitAllowingStateLoss();
+        //  ivFilter.setVisibility(View.GONE);
+
+
+
+
+    }
+
+    public void showFragment(Fragment fragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frameLayout_main, fragment,
+                fragment.getClass().getSimpleName());
+        transaction.commit();
+
+    }
+
 }
+
 

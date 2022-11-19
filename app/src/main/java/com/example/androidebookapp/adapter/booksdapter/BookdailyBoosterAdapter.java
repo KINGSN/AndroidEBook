@@ -69,7 +69,7 @@ public class BookdailyBoosterAdapter extends RecyclerView.Adapter {
     public ArrayList<BookSubCategoryList> my_id_dataArrayList1;
     private OnClick onClick;
     private BookdailyBoosterAdapter categoryAdapter;
-    public MyHDataAdapter categoryAdapterr;
+    public BookSubCatAdapter categoryAdapterr;
     private Boolean isOver = false;
     private int paginationIndex = 1;
     private String adsParam = "1";
@@ -84,8 +84,9 @@ public class BookdailyBoosterAdapter extends RecyclerView.Adapter {
         this.type = type;
         this.categoryLists = categoryLists;
         this.j=i;
+        Log.d("KINGSN", "BookdailyBoosterAdapter: "+i);
         CategoryN=GlobalVariables.categoryLists.get(j).getCategory_name();
-        Log.d("kingsn", "BookTabAdapter: "+j+"\n"+CategoryN);
+        Log.d("kingsn", "BookHomeAdapter: "+j+"\n"+CategoryN);
         method = new Method(activity, onClick);
        // method.preferencess.setIntValue("json",j);
         Resources r = activity.getResources();
@@ -102,9 +103,6 @@ public class BookdailyBoosterAdapter extends RecyclerView.Adapter {
         } else if (viewType == VIEW_TYPE_LOADING) {
             View v = LayoutInflater.from(activity).inflate(R.layout.layout_loading_item, parent, false);
             return new ProgressViewHolder(v);
-        } else if (viewType == VIEW_TYPE_Ad) {
-            View view = LayoutInflater.from(activity).inflate(R.layout.adview_adapter, parent, false);
-            return new AdOption(view);
         }
         return null;
     }
@@ -331,10 +329,10 @@ public class BookdailyBoosterAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return categoryLists.size() + 1;
+        return categoryLists.size() ;
     }
 
-    public void hideHeader() {
+    public static void hideHeader() {
         ProgressViewHolder.progressBar.setVisibility(View.GONE);
     }
 
@@ -342,9 +340,7 @@ public class BookdailyBoosterAdapter extends RecyclerView.Adapter {
     public int getItemViewType(int position) {
         if (categoryLists.size() == position) {
             return VIEW_TYPE_LOADING;
-        } else if (categoryLists.get(position).isIs_ads()) {
-            return VIEW_TYPE_Ad;
-        } else {
+        }  else {
             return VIEW_TYPE_ITEM;
         }
     }
@@ -373,6 +369,7 @@ public class BookdailyBoosterAdapter extends RecyclerView.Adapter {
         public ProgressViewHolder(View v) {
             super(v);
             progressBar = v.findViewById(R.id.progressBar_loading);
+            progressBar.setVisibility(View.GONE);
         }
     }
 

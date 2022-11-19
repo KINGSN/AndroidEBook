@@ -2,6 +2,7 @@ package com.example.androidebookapp.adapter.booksdapter;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -16,10 +17,12 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.androidebookapp.R;
+import com.example.androidebookapp.activity.BookViewActivity;
+import com.example.androidebookapp.activity.QuizChapterActivity;
+import com.example.androidebookapp.activity.QuizQuestionActivity;
 import com.example.androidebookapp.fragment.booksViewFragment;
-import com.example.androidebookapp.fragment.bookschapterFragment;
+import com.example.androidebookapp.fragment.quizFragment.QuizHomeFragment;
 import com.example.androidebookapp.interfaces.OnClick;
 import com.example.androidebookapp.item.BookChapterList;
 import com.example.androidebookapp.item.BookSubjectList;
@@ -30,6 +33,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class BookChapterAdapter extends RecyclerView.Adapter {
 
@@ -38,12 +42,12 @@ public class BookChapterAdapter extends RecyclerView.Adapter {
     private String type;
     private int columnWidth;
     private List<BookChapterList> bookChapterLists;
-
+    private  Intent intent;
 
     public ArrayList<BookSubjectList> my_id_dataArrayList1;
     private OnClick onClick;
     private BookChapterAdapter categoryAdapter;
-    public MyHDataAdapter categoryAdapterr;
+    public BookSubCatAdapter categoryAdapterr;
     private Boolean isOver = false;
     private int paginationIndex = 1;
     private String adsParam = "1";
@@ -100,11 +104,29 @@ public class BookChapterAdapter extends RecyclerView.Adapter {
             viewHolder.cardview.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+/*
                     ((FragmentActivity)activity).getSupportFragmentManager()
                             .beginTransaction()
-                            .replace(R.id.frameLayout_main, new booksViewFragment(bookChapterLists.get(position).getChapterId(),bookChapterLists.get(position).getChapSubjTitle(),bookChapterLists.get(position).getChap_lang()))
-                            .commit();
+                            //.replace(R.id.frameLayout_main, new booksViewFragment(bookChapterLists.get(position).getChapterId(),bookChapterLists.get(position).getChapSubjTitle(),bookChapterLists.get(position).getChap_lang()))
+                            .replace(R.id.frameLayout_main, new QuizQuestionActivity())
+                            .commit();*/
+
+                   /* if(!Objects.equals(ScreenType, "QuizSubjectActivity")){
+                        intent = new Intent((FragmentActivity)activity, BookViewActivity.class);
+                    }else{
+                        intent = new Intent((FragmentActivity)activity, QuizChapterActivity.class);
+                    }
+*/
+                    intent = new Intent(activity, QuizQuestionActivity.class);
+                   // intent.putExtra("screenType","BookViewActivity");
+                    /*intent.putExtra("cat_id",bookSubjectLists.get(position).getCid());
+                    intent.putExtra("sub_cat_id", bookSubjectLists.get(position).getSubjSid());
+                    intent.putExtra("book_subjId", bookSubjectLists.get(position).getSubjectsId());
+                    intent.putExtra("Language", bookSubjectLists.get(position).getSubjLangType());
+                    intent.putExtra("Language", bookSubjectLists.get(position).getSubjLangType());
+                    intent.putExtra("topic", bookSubjectLists.get(position).getSubjTitle());*/
+                    activity.startActivity(intent);
+
                 }
             });
 

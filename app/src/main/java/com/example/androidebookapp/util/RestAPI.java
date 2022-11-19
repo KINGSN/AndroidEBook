@@ -44,6 +44,10 @@ public class RestAPI {
     public static final String get_bookSubjects = "get_book_subjects";
     public static final String get_book_subjects_chapter = "get_book_subjects_chapter";
     public static final String get_books = "get_books";
+    public static final String get_Quizcategory = "get_quizcategory";
+    public static final String get_QuizSubcategory = "get_quizsubcategory";
+    public static final String get_QuizSubjects = "get_quiz_subjects";
+ public static final String get_quiz_subjects_chapter = "get_quiz_subjects_chapter";
 
 
 

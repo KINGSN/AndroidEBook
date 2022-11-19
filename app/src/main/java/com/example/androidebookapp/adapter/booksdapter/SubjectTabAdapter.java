@@ -15,13 +15,16 @@ import com.example.androidebookapp.fragment.subjectTabFragment.subjectTabFragmen
 public class SubjectTabAdapter extends FragmentStateAdapter {
 
     private Context mContext;
-    String subcategory;
+    String subcategory,subjecttype,Subject_name;
 
-    public SubjectTabAdapter(Context context, @NonNull FragmentManager fragmentManager,@NonNull Lifecycle lifecycle, String sid) {
+    public SubjectTabAdapter(Context context, @NonNull FragmentManager fragmentManager,@NonNull Lifecycle lifecycle,
+                             String sid,String subjectType,String SubjectName) {
         //super(fm);
         super(fragmentManager, lifecycle);
         mContext = context;
         subcategory=sid;
+        subjecttype=subjectType;
+        Subject_name=SubjectName;
     }
 
 
@@ -36,11 +39,11 @@ public class SubjectTabAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         if(position==0){
-            return new subjectTabFragment("en",subcategory);
+            return new subjectTabFragment("en",subcategory,subjecttype,Subject_name);
         }
         else
         if(position==1){
-            return new subjectTabFragmentHn("hn",subcategory);
+            return new subjectTabFragmentHn("hn",subcategory,subjecttype,Subject_name);
 
         } /*if(position==2){
             return new WithdrawalHistoryFragment();
@@ -49,7 +52,7 @@ public class SubjectTabAdapter extends FragmentStateAdapter {
         else
         {
 
-            return new subjectTabFragment("en", subcategory);
+            return new subjectTabFragment("en", subcategory,subjecttype,Subject_name);
         }
     }
 

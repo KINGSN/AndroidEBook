@@ -2,6 +2,7 @@ package com.example.androidebookapp.adapter.booksdapter;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -17,8 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.androidebookapp.R;
-import com.example.androidebookapp.fragment.bookfragments.SubjectFragment;
-import com.example.androidebookapp.fragment.bookschapterFragment;
+import com.example.androidebookapp.activity.BookViewActivity;
+import com.example.androidebookapp.activity.QuizChapterActivity;
 import com.example.androidebookapp.interfaces.OnClick;
 import com.example.androidebookapp.item.BookSubjectList;
 import com.example.androidebookapp.util.Method;
@@ -28,20 +29,21 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class BookSubjectAdapter extends RecyclerView.Adapter {
 
     private Method method;
     private Activity activity;
-    private String type;
+    private String type,ScreenType;
     private int columnWidth;
     private List<BookSubjectList> bookSubjectLists;
     //private List<BookSubCategoryList> bookSubjectListss;
-
+     public  Intent intent=new Intent();
     public ArrayList<BookSubjectList> my_id_dataArrayList1;
     private OnClick onClick;
     private BookSubjectAdapter categoryAdapter;
-    public MyHDataAdapter categoryAdapterr;
+    public BookSubCatAdapter categoryAdapterr;
     private Boolean isOver = false;
     private int paginationIndex = 1;
     private String adsParam = "1";
@@ -51,9 +53,10 @@ public class BookSubjectAdapter extends RecyclerView.Adapter {
     private final int VIEW_TYPE_ITEM = 1;
     private final int VIEW_TYPE_Ad = 2;
       public  int j;
-    public BookSubjectAdapter(Activity activity, List<BookSubjectList> bookSubjectLists, String type) {
+    public BookSubjectAdapter(Activity activity, List<BookSubjectList> bookSubjectLists, String type,String subjecttype) {
         this.activity = activity;
         this.type = type;
+        this.ScreenType = subjecttype;
         this.bookSubjectLists = bookSubjectLists;
         method = new Method(activity, onClick);
        // method.preferencess.setIntValue("json",j);
@@ -96,14 +99,34 @@ public class BookSubjectAdapter extends RecyclerView.Adapter {
                     .placeholder(R.drawable.round_bg)
                     .into(viewHolder.subjImage);
 
+            //hideHeader();
+
             viewHolder.cardview.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((FragmentActivity)activity).getSupportFragmentManager()
+                  /*  ((FragmentActivity)activity).getSupportFragmentManager()
                             .beginTransaction()
                             .replace(R.id.frameLayout_main, new bookschapterFragment(bookSubjectLists.get(position).getSubjectsId(),bookSubjectLists.get(position).getSubjTitle(),bookSubjectLists.get(position).getSubjLangType()))
                             .commit();
+*/
+                if(!Objects.equals(ScreenType, "QuizSubjectActivity")){
+                     intent = new Intent((FragmentActivity)activity, BookViewActivity.class);
+                }else{
+                     intent = new Intent((FragmentActivity)activity, QuizChapterActivity.class);
                 }
+
+
+                    intent.putExtra("screenType","BookViewActivity");
+                    intent.putExtra("cat_id",bookSubjectLists.get(position).getCid());
+                    intent.putExtra("sub_cat_id", bookSubjectLists.get(position).getSubjSid());
+                    intent.putExtra("book_subjId", bookSubjectLists.get(position).getSubjectsId());
+                    intent.putExtra("Language", bookSubjectLists.get(position).getSubjLangType());
+                    intent.putExtra("Language", bookSubjectLists.get(position).getSubjLangType());
+                    intent.putExtra("topic", bookSubjectLists.get(position).getSubjTitle());
+                    activity.startActivity(intent);
+                }
+
+
             });
 
             //    viewHolder.constraintLayout.setLayoutParams(new CardView.LayoutParams(CardView.LayoutParams.MATCH_PARENT, columnWidth / 3));
@@ -321,7 +344,7 @@ public class BookSubjectAdapter extends RecyclerView.Adapter {
         return bookSubjectLists.size() + 1;
     }
 
-    public void hideHeader() {
+    public static void hideHeader() {
         ProgressViewHolder.progressBar.setVisibility(View.GONE);
     }
 
@@ -364,6 +387,8 @@ public class BookSubjectAdapter extends RecyclerView.Adapter {
             progressBar.setVisibility(View.GONE);
         }
     }
+
+
 
     public class AdOption extends RecyclerView.ViewHolder {
 
